@@ -11,7 +11,7 @@ stay on your machine; AI calls go only to the provider you choose.
 
 <br>
 
-## ⬇️ [Download Free — no account, no credit card](https://codelux.ai/download)
+## ⬇️ [Download Free — free account, no credit card](https://codelux.ai/download)
 
 **[codelux.ai](https://codelux.ai)** · **[Docs](https://codelux.ai/docs)** · **[Pricing](https://codelux.ai/pricing)** · **[FAQ](https://codelux.ai/faq)**
 
@@ -23,7 +23,7 @@ stay on your machine; AI calls go only to the provider you choose.
 
 1. **[Download](https://codelux.ai/download)** the Free build for your platform — Windows, Linux x86_64 or Linux ARM64.
 2. **Run it** — a local dashboard opens at `localhost`.
-3. **Register inside the app**, in seconds. No account needed before this step.
+3. **Create your free account inside the app**, in seconds.
 
 Free forever, one active project per machine, every feature unlocked, no time
 limit, no card. Need more than one project at once? [Multi and Team](https://codelux.ai/pricing)
