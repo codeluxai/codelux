@@ -17,7 +17,7 @@ stay on your machine; AI calls go only to the provider you choose.
 
 <br>
 
-<img src="readme-team-chat.png" alt="Codelux dashboard — Team tab: end-to-end encrypted team chat, members and who is editing what" width="900">
+<img src="readme-dashboard.png" alt="Codelux dashboard — index stats, query graph, indexed paths and the command console" width="900">
 
 </div>
 
@@ -48,7 +48,7 @@ ciphertext and can neither read nor re-attribute a message. Projects sync as
 Git clones or over a shared/network (SMB) folder, with live "who is editing
 what" locks so two people never overwrite each other.
 
-<img src="readme-dashboard.png" alt="Codelux dashboard — index stats, query graph, indexed paths and the command console" width="900">
+<img src="readme-team-chat.png" alt="Codelux dashboard — Team tab: end-to-end encrypted team chat, members and who is editing what" width="900">
 
 ## What Codelux gives your AI
 
