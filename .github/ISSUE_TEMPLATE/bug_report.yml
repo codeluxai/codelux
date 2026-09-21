@@ -1,0 +1,30 @@
+name: Bug report
+description: Something in Codelux does not work as expected
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Codelux version and OS
+      placeholder: "3.5 · Windows 11 / Ubuntu 24.04 / macOS 15"
+    validations:
+      required: true
+  - type: dropdown
+    id: plan
+    attributes:
+      label: Plan
+      options: [Free, Multi, Team]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Steps to reproduce, what you expected, what you got. Please do not paste project code or keys.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: From Help → Feedback & ideas → "attach diagnostics", or the Logs tab. Paths and e-mails are redacted automatically.
