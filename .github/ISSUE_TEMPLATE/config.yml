@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Docs
+    url: https://codelux.ai/docs
+    about: Setup, tools reference, team guide.
+  - name: Security issue
+    url: https://codelux.ai/legal
+    about: Please e-mail hello@codelux.ai instead of opening a public issue.
