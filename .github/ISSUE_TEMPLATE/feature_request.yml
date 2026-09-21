@@ -1,0 +1,16 @@
+name: Idea or feature request
+description: Suggest something for Codelux
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What would you like Codelux to do, and what problem does it solve for you?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Code context / index, TaskAI, Team collaboration, Git, Dashboard, MCP / CLI / HTTP, Website / billing, Other]
