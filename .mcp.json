@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "codelux": {
-      "url": "http://localhost:8766/mcp",
-      "description": "Codelux local daemon. Install from https://codelux.ai/download and run `codelux start`; the port is the one printed at startup (default 8766)."
+      "type": "http",
+      "url": "http://localhost:${user_config.port}/mcp"
     }
   }
 }
