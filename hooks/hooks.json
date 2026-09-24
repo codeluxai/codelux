@@ -1,0 +1,17 @@
+{
+  "description": "Codelux: at session start, put today's project memory (notes, edits, tool calls) in context. Silent when the daemon is not running.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-start.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
