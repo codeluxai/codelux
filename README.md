@@ -54,7 +54,21 @@ add unlimited projects and team collaboration.
 
 Every download comes straight from [codelux.ai](https://codelux.ai/download):
 the site builds and signs each binary, and the app checks its own integrity on
-every start. Nothing to install from this repository.
+every start. The only thing this repository installs is the Claude Code plugin below.
+
+### Claude Code plugin
+
+This repository is also a Claude Code plugin marketplace. With Codelux running:
+
+```bash
+claude plugin marketplace add codeluxai/codelux
+claude plugin install codelux@codelux
+```
+
+It connects the Codelux MCP tools (`http://localhost:8766/mcp`), adds the `codelux-setup` and
+`codelux-usage` skills, the `/codelux:status`, `/codelux:memory` and `/codelux:checkpoint` commands,
+and a session-start hook that puts today's project memory in context. Different port?
+`claude plugin install codelux@codelux --config port=<port>`. Details in [PLUGIN.md](PLUGIN.md).
 
 ---
 
@@ -142,7 +156,8 @@ what" locks so two people never overwrite each other.
 ## What's in this repo
 
 This is Codelux's home on GitHub: the README you are reading, the screenshots
-and a `.mcp.json` pointing at the local daemon. Downloads live on [codelux.ai/download](https://codelux.ai/download),
+and the Claude Code plugin (`.claude-plugin/`, `skills/`, `hooks/`, `scripts/` and the `.mcp.json`
+pointing at the local daemon). Downloads live on [codelux.ai/download](https://codelux.ai/download),
 docs on [codelux.ai/docs](https://codelux.ai/docs). No source code here — see
 [codelux.ai/legal](https://codelux.ai/legal) for licensing terms. Found a bug or
 have an idea? Use **Help → Feedback & ideas** inside the app.
