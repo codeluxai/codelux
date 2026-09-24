@@ -2,12 +2,11 @@
 
 # Codelux
 
-### A new helper for your AI
+### The AI Development Space
 
-Your whole project, kept like a living book your AI can read from — low-token
-algorithms, persistent memory, a live knowledge graph and instant search.
-Notes, CodeMap, Brief, one guarded write path and a journal. Index and memory
-stay on your machine; AI calls go only to the provider you choose.
+One environment where your coding agents **index** your projects, **remember**
+them across sessions and **share** them with your team. Works with Claude Code,
+Cursor, Codex, VS Code and any MCP client. Index and memory stay on your machine.
 
 <br>
 
@@ -23,10 +22,30 @@ stay on your machine; AI calls go only to the provider you choose.
 
 ---
 
+## Your AI forgets your project every session
+
+If you use a coding agent every day, you already pay for it:
+
+- **It starts from zero.** Every new session re-reads the same files and asks you to re-explain the same architecture.
+- **It burns tokens.** Whole files go into the context to find three functions.
+- **It forgets decisions.** What you tried, what you abandoned and why lives in a chat that is gone tomorrow.
+- **Your team doesn't share it.** Each person, and each agent, rebuilds the same understanding on its own.
+
+**Codelux is the environment your agents work in:**
+
+| | |
+|---|---|
+| **Index** | A local symbol index of every project: search by intent, call trees, compressed reads (50–90% fewer tokens). |
+| **Memory** | Notes, decisions and a continuation journal that the next session picks up in one call. |
+| **Share** | Team plan: one project, one memory, end-to-end encrypted between machines, Git clones or a shared folder. |
+| **Local & private** | Code, index and history never leave your machine. AI calls go only to the provider you choose. |
+
+---
+
 ## Get started
 
 1. **[Download](https://codelux.ai/download)** the Free build for your platform — Windows, Linux (x86_64 / ARM64) or macOS (Apple Silicon / Intel, unsigned: right-click → Open the first time).
-2. **Run it** — a local dashboard opens at `localhost`.
+2. **Run it** — it prints the address of its local dashboard (`http://localhost:<port>`) and indexes your project.
 3. **Create your free account inside the app**, in seconds.
 
 Free forever, one active project per machine, every feature unlocked, no time
@@ -47,6 +66,10 @@ handed to members over an authenticated channel; the server only stores
 ciphertext and can neither read nor re-attribute a message. Projects sync as
 Git clones or over a shared/network (SMB) folder, with live "who is editing
 what" locks so two people never overwrite each other.
+
+<div align="center">
+<img src="readme-team-space.png" alt="Four developers at one desk, each laptop running Codelux, syncing through an encrypted link to a shared folder or a Git repository" width="620">
+</div>
 
 <img src="readme-team-chat.png" alt="Codelux dashboard — Team tab: end-to-end encrypted team chat, members and who is editing what" width="900">
 
@@ -105,10 +128,21 @@ what" locks so two people never overwrite each other.
 
 ---
 
+## What's new (September 2026)
+
+- **The AI Development Space** — one environment for indexing, memory and team sharing.
+- **Works with the new models** — Claude Opus 5.5, Fable 5.1, GPT-6 and any provider you configure.
+- **Instant local calls** — the daemon answers on `localhost` over both IPv4 and IPv6 (no more 2-second waits on Windows).
+- **Clean repositories** — Codelux's working folder `.codelux/` ignores itself in git.
+- **Live indexing feedback** — the project's dot pulses in the sidebar while it indexes, with exact file counts.
+- **Team plan** — zero-knowledge team memory: shared notes, journal and encrypted chat.
+
+---
+
 ## What's in this repo
 
-This is Codelux's home on GitHub: the README you are reading and the two
-screenshots. Downloads live on [codelux.ai/download](https://codelux.ai/download),
+This is Codelux's home on GitHub: the README you are reading, the screenshots
+and a `.mcp.json` pointing at the local daemon. Downloads live on [codelux.ai/download](https://codelux.ai/download),
 docs on [codelux.ai/docs](https://codelux.ai/docs). No source code here — see
 [codelux.ai/legal](https://codelux.ai/legal) for licensing terms. Found a bug or
 have an idea? Use **Help → Feedback & ideas** inside the app.
