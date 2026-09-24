@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "codelux",
+  "description": "Codelux plugin for Claude Code: local code index, persistent memory and team sharing for your coding agents.",
+  "owner": {
+    "name": "Codelux",
+    "email": "hello@codelux.ai",
+    "url": "https://codelux.ai"
+  },
+  "plugins": [
+    {
+      "name": "codelux",
+      "source": "./",
+      "description": "The AI Development Space: local index, persistent memory and team sharing for your coding agents",
+      "category": "development",
+      "homepage": "https://codelux.ai",
+      "keywords": ["mcp", "code-index", "memory", "context", "multi-agent"]
+    }
+  ]
+}
