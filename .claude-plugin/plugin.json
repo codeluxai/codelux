@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "codelux",
+  "displayName": "Codelux",
+  "version": "3.5.0",
+  "description": "The AI Development Space: local index, persistent memory and team sharing for your coding agents",
+  "author": {
+    "name": "Codelux",
+    "email": "hello@codelux.ai",
+    "url": "https://codelux.ai"
+  },
+  "homepage": "https://codelux.ai",
+  "repository": "https://github.com/codeluxai/codelux",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "keywords": [
+    "mcp",
+    "code-index",
+    "memory",
+    "context",
+    "token-saving",
+    "code-search",
+    "multi-agent",
+    "team",
+    "local-first",
+    "codelux"
+  ],
+  "userConfig": {
+    "port": {
+      "type": "number",
+      "title": "Codelux port",
+      "description": "Port of the local Codelux daemon (the one printed by `codelux start`; set in codelux.cfg). Default 8766.",
+      "min": 1,
+      "max": 65535,
+      "default": 8766
+    }
+  }
+}
