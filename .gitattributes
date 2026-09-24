@@ -1,0 +1,2 @@
+# Script eseguiti da bash (hook SessionStart): sempre LF, anche nei clone Windows con core.autocrlf=true.
+*.sh text eol=lf
