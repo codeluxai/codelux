@@ -41,7 +41,7 @@ If you use a coding agent every day, you already pay for it:
 
 | | |
 |---|---|
-| **Index** | A local symbol index of every project: search by intent, call trees, compressed reads (50–90% fewer tokens). |
+| **Index** | Your codebase parsed into symbols, call flows and a knowledge graph, 20 languages. Agents query it instead of reading whole files: up to 90% fewer tokens. |
 | **Memory** | Notes, decisions and a continuation journal that the next session picks up in one call. |
 | **Share** | Team plan: one project, one memory, end-to-end encrypted between machines, Git clones or a shared folder. |
 | **Local & private** | Code, index and history never leave your machine. AI calls go only to the provider you choose. |
