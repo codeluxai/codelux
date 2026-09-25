@@ -2,7 +2,7 @@
   "mcpServers": {
     "codelux": {
       "type": "http",
-      "url": "http://localhost:${user_config.port}/mcp"
+      "url": "http://localhost:${user_config.port}/mcp?profile=full"
     }
   }
 }
