@@ -13,7 +13,8 @@ never sign in, sign out or change their account yourself.
 Below, `PORT` is the Codelux port: `8766` unless the user changed it. A changed port is stored as the
 plugin option `port`, in the user's `~/.claude/settings.json` under
 `pluginConfigs["codelux@<marketplace>"].options.port`; the MCP server of this plugin connects to
-`http://localhost:<that port>/mcp`.
+`http://localhost:<that port>/mcp?profile=full` (all tools; plain `/mcp` lists only the core
+read/memory tools, the others stay callable by name).
 
 ## 1. Is the daemon running?
 
