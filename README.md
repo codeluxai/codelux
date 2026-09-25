@@ -16,6 +16,12 @@ Cursor, Codex, VS Code and any MCP client. Index and memory stay on your machine
 
 <br>
 
+<a href="https://youtu.be/7ASLhp3FOwE"><img src="readme-video.png" alt="Watch the 2-minute Codelux demo on YouTube" width="900"></a>
+
+**▶ [Watch the 2-minute demo](https://youtu.be/7ASLhp3FOwE)** — indexing, memory across sessions and the Team plan, recorded on the real app.
+
+<br>
+
 <img src="readme-dashboard.png" alt="Codelux dashboard — index stats, query graph, indexed paths and the command console" width="900">
 
 </div>
