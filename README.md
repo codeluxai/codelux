@@ -41,7 +41,7 @@ If you use a coding agent every day, you already pay for it:
 
 | | |
 |---|---|
-| **Index** | Your codebase parsed into symbols, call flows and a knowledge graph, 20 languages. Agents query it instead of reading whole files: up to 90% fewer tokens. |
+| **Index** | Your codebase parsed into symbols, call flows and a knowledge graph, 20 languages. Agents query symbols and call flows instead of opening whole files. |
 | **Memory** | Notes, decisions and a continuation journal that the next session picks up in one call. |
 | **Share** | Team plan: one project, one memory, end-to-end encrypted between machines, Git clones or a shared folder. |
 | **Local & private** | Code, index and history never leave your machine. AI calls go only to the provider you choose. |
@@ -97,16 +97,16 @@ what" locks so two people never overwrite each other.
 
 ### Code Context
 - **Smart Query** — boolean search with AND (`&`), OR (`|`) and NOT (`!`); fuzzy matching on name, intent, docs and semantic domains.
-- **Compact File Reading** — read any file in CCI Compact format: 50–70% fewer tokens, lossless, with original line references so the AI can edit the real file.
+- **Compact File Reading** — read any file in CCI Compact format: lossless, with original line references so the AI can edit the real file.
 - **Flow Analysis** — trace call flows from any entry point; recursive call trees with cycle detection and external-call markers.
 - **Knowledge Graph** — a semantic graph builds itself with every query: keywords, files and symbols linked by real usage frequency.
 - **CodeMap** — write a plain-language label like "backend / cache" and the on-board AI resolves it to exact files and symbols.
 - **Raw Grep & Outline** — regex search across raw sources plus a structural outline of any file (functions, classes, methods, line numbers).
 - **20 supported languages** — 16 with a real tree-sitter grammar (Python, JavaScript, TypeScript, Go, HTML, CSS, C/C++, C#, Rust, Java, PHP, SQL, Pascal/Delphi, Markdown), the rest with dedicated extractors (Vue, Svelte, Blazor Razor, JSON, YAML). Every other file type stays searchable with raw grep.
 
-### Tokens
-- **CCI Compression** — the Context Compression Index cuts symbol data by up to 90% while keeping every relevant detail.
-- **Token Analytics** — every query logs raw vs. compressed tokens, visible on the dashboard.
+### Compact context
+- **CCI Compression** — the Context Compression Index serves symbols as one dense line each: name, signature, location and intent, without the surrounding source.
+- **Token Analytics** — every query is logged on the dashboard with an estimate of the tokens a raw read would have used and what the compact answer used.
 
 ### TaskAI
 - **Background Requests** — hand work to a TaskAI and keep going; it runs in the background, stays queryable, and its whole history survives the process. Everything stays on your machine — no log of request sessions is kept.
