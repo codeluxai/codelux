@@ -6,7 +6,7 @@ description: How to work on a Codelux-indexed project with the codelux MCP tools
 # Working with Codelux
 
 Codelux has already indexed this project and remembers what earlier sessions (and other agents or
-teammates) did. Use it instead of re-exploring from scratch: it costs fewer tokens and the user does
+teammates) did. Use it instead of re-exploring from scratch: the knowledge is already there and the user does
 not have to re-explain.
 
 ## The one parameter that matters: `root`
@@ -40,8 +40,8 @@ answers that the folder "is not indexed", use the `codelux-setup` skill.
    task. Resume from the last checkpoint's `next` instead of re-planning.
 2. **Query, don't crawl.** Find code with `code_query` / `code_grep` / `code_tree` before opening files.
    Do not list directories and read whole files blind.
-3. **Read compressed.** `file_read` returns a lossless compressed view with original `[line]` numbers,
-   50-70 % fewer tokens than a raw read. Its first line is `hash: <h>`: keep it.
+3. **Read compressed.** `file_read` returns a lossless compressed view with original `[line]` numbers.
+   Its first line is `hash: <h>`: keep it.
 4. **One write path.** On an indexed project prefer `file_edit` to your own Edit/Write: it backs the file up
    first, reindexes immediately and refuses a stale write. Pass the `hash` you read as `base_hash`.
    `agent` is required: pick a short codename (e.g. `claude_4821`) and reuse it all session. A refusal
@@ -57,6 +57,11 @@ answers that the folder "is not indexed", use the `codelux-setup` skill.
 
 `git_status`, `git_commit`, `git_branch` (read-only) and `git_push` (off until the user authorises it)
 are available too. `git_push` must never be used unless the user asked for it.
+
+Tool descriptions are kept short on purpose. `code_help` with `tool` = a tool name returns its full
+guide (formats, examples, edge cases): call it before guessing, e.g. for `code_note` forms. `code_query`
+and `code_grep` answer one line per hit, grouped by file, tests last; `with_memory: true` adds the
+recent-activity line.
 
 If you are unsure about a tool, the daemon serves the full, version-matched reference at
 `http://localhost:8766/help` and the setup guide at `http://localhost:8766/first-installation`.
