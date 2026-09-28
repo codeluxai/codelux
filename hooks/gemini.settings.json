@@ -1,0 +1,71 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-memory",
+            "description": "Codelux: project memory in context at session start; refreshes the AGENTS.md/GEMINI.md block",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\" --json",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-prompt-memory",
+            "description": "Codelux: relevant memory for this prompt as additionalContext (nothing when nothing is found)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\" --json",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "write_file|replace|edit",
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-lock-acquire",
+            "description": "Codelux: take the file lock (local + Team) before an edit; exit 2 with the reason when refused",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|replace|edit",
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-lock-release",
+            "description": "Codelux: release the file lock after an edit",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-stop-reminder",
+            "description": "Codelux: remind the agent to close with memory_set (never blocks)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-stop.sh\" --json",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

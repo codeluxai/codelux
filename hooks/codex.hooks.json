@@ -1,0 +1,64 @@
+{
+  "description": "Codelux hooks for Codex. Copy to <repo>/.codex/hooks.json (or ~/.codex/hooks.json) and replace CODELUX_PLUGIN with the absolute path of the folder that holds scripts/. Same scripts as the Claude Code plugin; plain stdout is added as context, exit 2 on acquire blocks the edit with the stderr reason. See hooks/OTHER-AGENTS.md for the fields we could not verify.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\"",
+            "timeout": 10,
+            "additionalContextLimit": 12500
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-stop.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

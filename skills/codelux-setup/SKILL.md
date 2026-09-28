@@ -13,8 +13,7 @@ never sign in, sign out or change their account yourself.
 Below, `PORT` is the Codelux port: `8766` unless the user changed it. A changed port is stored as the
 plugin option `port`, in the user's `~/.claude/settings.json` under
 `pluginConfigs["codelux@<marketplace>"].options.port`; the MCP server of this plugin connects to
-`http://localhost:<that port>/mcp?profile=full` (all tools; plain `/mcp` lists only the core
-read/memory tools, the others stay callable by name).
+`http://localhost:<that port>/mcp` (the 8 tools: memory, notes, index, edit, agents).
 
 ## 1. Is the daemon running?
 
@@ -65,8 +64,8 @@ directory (case-insensitive on Windows; `\` and `/` are equivalent).
 ## 4. Do the MCP tools answer?
 
 Check that the `codelux` MCP server is connected (its tools appear as `mcp__plugin_codelux_codelux__*`,
-e.g. `code_map`). Call `code_map` with `root` = the path from step 3. A map of the project (journal,
-notes, index size) means the setup is complete.
+e.g. `memory_get`). Call `memory_get` with `root` = the path from step 3 and no other argument. The
+newest memory (or "no memory yet" for a fresh project) means the setup is complete.
 
 Without MCP, the same check over HTTP:
 
@@ -75,7 +74,8 @@ curl -s -X POST http://localhost:PORT/mcp -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
 ```
 
-A list of tools (`code_query`, `code_memory`, `file_read`, `file_edit`, ...) means the endpoint works.
+A list of the 8 tools (`memory_set`, `memory_get`, `notes_set`, `notes_get`, `code_query`, `code_context`,
+`code_edit`, `agents_msg`) means the endpoint works.
 If the daemon answers over HTTP but the MCP tools are not in this session, either the daemon was not
 running when the session started (ask the user to run `/mcp` to reconnect, or to restart Claude Code), or
 the plugin's `port` option does not match the port the daemon answers on (see "Different port").
@@ -91,6 +91,6 @@ Codelux keeps its port in `codelux.cfg` (next to the binary, field `port`). If i
 ## When everything works
 
 Tell the user in one or two lines that Codelux is connected and which project is active, then follow the
-`codelux-usage` skill: open work with `code_map` / `code_memory`, search with `code_query`, read with
-`file_read`, and leave a checkpoint with `code_set` at the end. The full guide served by the daemon is at
+`codelux-usage` skill: the memory arrives by itself at session start and with each prompt, check facts
+with `code_query`, and leave one `memory_set` at the end. The full guide served by the daemon is at
 `http://localhost:PORT/first-installation`.

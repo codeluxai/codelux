@@ -1,5 +1,5 @@
 {
-  "description": "Codelux: at session start, put today's project memory (notes, edits, tool calls) in context. Silent when the daemon is not running.",
+  "description": "Codelux: at session start, put the project memory in context and refresh the AGENTS.md block; with each prompt, add the relevant memory (nothing when nothing is found); around Claude Code's own Edit/Write, take and release the file lock (local + Team); at stop, remind the agent to close with memory_set. Silent when the daemon is not running. The lock is also released when the edit fails (PostToolUseFailure), so a failed edit never holds a file.",
   "hooks": {
     "SessionStart": [
       {
@@ -8,6 +8,64 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-start.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/prompt-memory.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" acquire",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" release",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-stop.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" release-failed",
             "timeout": 10
           }
         ]

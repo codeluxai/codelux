@@ -20,8 +20,10 @@ unless the user set the plugin option `port` (stored in `~/.claude/settings.json
    - Not found: say this folder is not a registered project and how to add it
      (https://codelux.ai/dashboard -> Projects -> Add a project, absolute path). Stop here.
    - Found: report its id, name, path and, if present, team name / role / share mode.
-3. MCP: if the `codelux` MCP tools are available in this session, call `code_stats` with
-   `root` = that path and report the indexed file and symbol counts. If they are not available, say the
-   MCP server is not connected and suggest `/mcp` to reconnect.
+3. MCP: say whether the `codelux` MCP tools (`memory_get`, `memory_set`, `notes_get`, `notes_set`,
+   `code_query`, `code_context`, `code_edit`, `agents_msg`) are available in this session. If they are
+   not, say the MCP server is not connected and suggest `/mcp` to reconnect.
+4. Memory: if the tools answer, `memory_get` with `root` and report the date and topic of the newest
+   memory (or that there is none yet).
 
 Keep it to the table plus at most one line of next step. Do not print tokens or account emails.

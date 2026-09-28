@@ -13,4 +13,4 @@ body:
     id: area
     attributes:
       label: Area
-      options: [Code context / index, TaskAI, Team collaboration, Git, Dashboard, MCP / CLI / HTTP, Website / billing, Other]
+      options: [Code context / index, Team collaboration, Git, Dashboard, MCP / CLI / HTTP, Website / billing, Other]
