@@ -7,8 +7,19 @@
             "type": "command",
             "name": "codelux-memory",
             "description": "Codelux: project memory in context at session start; refreshes the AGENTS.md/GEMINI.md block",
-            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\" --json",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\" --json --agent=gemini",
             "timeout": 10000
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-session",
+            "description": "Codelux: session code and usage tracking (silent)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" start --agent=gemini",
+            "timeout": 5000
           }
         ]
       }
@@ -20,7 +31,14 @@
             "type": "command",
             "name": "codelux-prompt-memory",
             "description": "Codelux: relevant memory for this prompt as additionalContext (nothing when nothing is found)",
-            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\" --json",
+            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\" --json --agent=gemini",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "name": "codelux-session-prompt",
+            "description": "Codelux: count the prompt; rarely one hint about the last turn",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" prompt --json --agent=gemini",
             "timeout": 5000
           }
         ]
@@ -34,8 +52,20 @@
             "type": "command",
             "name": "codelux-lock-acquire",
             "description": "Codelux: take the file lock (local + Team) before an edit; exit 2 with the reason when refused",
-            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire --agent=gemini",
             "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-session-pre",
+            "description": "Codelux: start of every tool call for the procedure trace, file read (path+hash), MCP call announcement; rarely one hint as additionalContext",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" pre --json --agent=gemini",
+            "timeout": 5000
           }
         ]
       }
@@ -48,8 +78,20 @@
             "type": "command",
             "name": "codelux-lock-release",
             "description": "Codelux: release the file lock after an edit",
-            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release --agent=gemini",
             "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-session-post",
+            "description": "Codelux: one row of the procedure trace (tool, essential arguments, response size, duration; never contents)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" post --agent=gemini",
+            "timeout": 5000
           }
         ]
       }
@@ -59,10 +101,23 @@
         "hooks": [
           {
             "type": "command",
-            "name": "codelux-stop-reminder",
-            "description": "Codelux: remind the agent to close with memory_set (never blocks)",
-            "command": "bash \"CODELUX_PLUGIN/scripts/session-stop.sh\" --json",
+            "name": "codelux-session-stop",
+            "description": "Codelux: read the new usage numbers (silent)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" stop --agent=gemini",
             "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "codelux-session-end",
+            "description": "Codelux: close the task and write the usage report (silent)",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" end --agent=gemini",
+            "timeout": 10000
           }
         ]
       }

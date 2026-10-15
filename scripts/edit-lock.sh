@@ -17,6 +17,12 @@
 
 op="${1:-acquire}"
 case "$op" in acquire|release|release-failed) ;; *) exit 0 ;; esac
+# --agent=codex|gemini (default claude-code): whose session id the input carries.
+cx_agent_type="claude-code"
+for cx_a in "$@"; do
+  case "$cx_a" in --agent=*) cx_agent_type="${cx_a#--agent=}" ;; esac
+done
+case "$cx_agent_type" in ''|*[!a-z0-9._-]*) cx_agent_type="other" ;; esac
 # release-failed (PostToolUseFailure): free the file WITHOUT recording an edit.
 failed=""
 if [ "$op" = "release-failed" ]; then op="release"; failed=',"failed":true'; fi
@@ -34,8 +40,16 @@ path="$(printf '%s' "$input" | grep -oE '"(file_path|notebook_path|path)"[[:spac
 # block each other: the semaphore between agents needs a distinct name per
 # session. Acquire and release come from the same session, so they match.
 sid="$(printf '%s' "$input" | grep -oE '"session_id"[[:space:]]*:[[:space:]]*"[^"\]*"' | head -1 | sed -E 's/.*"([^"]*)"$/\1/')"
+# 07/10/2026: the daemon turns cx_session into the session's Codelux code (the
+# same name memory_set and code_edit record: agent_sessions.go). The legacy
+# "agent" stays for a daemon older than that, which ignores cx_session.
 agent=""
-[ -n "$sid" ] && agent=',"agent":"session-'"${sid:0:12}"'"'
+[ -n "$sid" ] && agent=',"agent":"session-'"${sid:0:12}"'","cx_session":"'"$sid"'","cx_agent":"'"$cx_agent_type"'"'
+# 368: inside a Claude Code subagent the input carries the PARENT's session_id
+# plus agent_id/agent_type (hooks docs, "common input fields"; captured stdin
+# 13/10/2026: "agent_id":"a44d7691918bb18fd","agent_type":"worker-opus-medium").
+# The daemon gives the subagent its own session code, child of the parent's.
+[ -n "$agent" ] && agent="$agent$(cx_subagent_fields "$input")"
 
 resp="$(cx_call code_lock ',"op":"'"$op"'","path":"'"$path"'"'"$agent$failed" 8)" || exit 0
 

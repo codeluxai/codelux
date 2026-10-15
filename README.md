@@ -164,5 +164,5 @@ have an idea? Use **Help → Feedback & ideas** inside the app.
 
 - **Docs:** [codelux.ai/docs](https://codelux.ai/docs)
 - **FAQ:** [codelux.ai/faq](https://codelux.ai/faq)
-- **Support:** through your [dashboard](https://codelux.ai/dashboard) once signed in.
+- **Support:** through the [Console](https://codelux.ai/console) once signed in.
 - **Follow:** [X @codeluxai](https://x.com/codeluxai) · [Reddit u/codelux_ai](https://www.reddit.com/user/codelux_ai/)

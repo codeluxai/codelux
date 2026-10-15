@@ -18,7 +18,8 @@ unless the user set the plugin option `port` (stored in `~/.claude/settings.json
 2. Project: `curl -s http://localhost:PORT/api/projects` and look for the entry whose `path` equals the
    current working directory (case-insensitive on Windows, `\` = `/`).
    - Not found: say this folder is not a registered project and how to add it
-     (https://codelux.ai/dashboard -> Projects -> Add a project, absolute path). Stop here.
+     (local dashboard -> Projects -> + Add project, absolute path; the list is also in
+     https://codelux.ai/console -> Account -> Your projects). Stop here.
    - Found: report its id, name, path and, if present, team name / role / share mode.
 3. MCP: say whether the `codelux` MCP tools (`memory_get`, `memory_set`, `notes_get`, `notes_set`,
    `code_query`, `code_context`, `code_edit`, `agents_msg`) are available in this session. If they are

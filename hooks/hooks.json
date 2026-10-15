@@ -1,14 +1,23 @@
 {
-  "description": "Codelux: at session start, put the project memory in context and refresh the AGENTS.md block; with each prompt, add the relevant memory (nothing when nothing is found); around Claude Code's own Edit/Write, take and release the file lock (local + Team); at stop, remind the agent to close with memory_set. Silent when the daemon is not running. The lock is also released when the edit fails (PostToolUseFailure), so a failed edit never holds a file.",
+  "description": "Codelux: at session start, put the project memory in context and refresh the AGENTS.md block; with each prompt, add the relevant memory (nothing when nothing is found); around Claude Code's own Edit/Write, take and release the file lock (local + Team); at the end of a turn (Stop), read its token numbers. Silent when the daemon is not running. The lock is also released when the edit fails (PostToolUseFailure), so a failed edit never holds a file. Session tracking (session-track.sh, silent): one Codelux session code per conversation for hooks, MCP calls and REST/CLI calls (a shell command that calls Codelux declares its agent name on the session; SessionStart exports CODELUX_SESSION/CODELUX_PROVIDER via CLAUDE_ENV_FILE), files read (path+hash, never text), per-turn token numbers from the transcript, end-of-work usage report. Procedure trace (377): PreToolUse + PostToolUse + PostToolUseFailure on EVERY tool (matcher .*), main session and subagents: tool, essential arguments (secrets redacted), response size, duration, outcome — never contents or outputs, local only; at most 2 sober hints a turn when a read is clearly wasted (off in the project settings).",
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|clear|compact",
+        "matcher": "startup|resume|clear|compact|fork",
         "hooks": [
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-start.sh\"",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" start",
+            "timeout": 5
           }
         ]
       }
@@ -19,6 +28,11 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/prompt-memory.sh\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" prompt",
             "timeout": 5
           }
         ]
@@ -34,6 +48,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" pre",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -46,6 +70,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" post",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Stop": [
@@ -53,7 +87,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-stop.sh\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" stop",
             "timeout": 5
           }
         ]
@@ -66,6 +100,38 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" release-failed",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" post-fail",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" subagent-stop",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" end",
             "timeout": 10
           }
         ]

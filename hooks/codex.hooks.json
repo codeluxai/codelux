@@ -1,5 +1,5 @@
 {
-  "description": "Codelux hooks for Codex. Copy to <repo>/.codex/hooks.json (or ~/.codex/hooks.json) and replace CODELUX_PLUGIN with the absolute path of the folder that holds scripts/. Same scripts as the Claude Code plugin; plain stdout is added as context, exit 2 on acquire blocks the edit with the stderr reason. See hooks/OTHER-AGENTS.md for the fields we could not verify.",
+  "description": "Codelux hooks for Codex. Copy to <repo>/.codex/hooks.json (or ~/.codex/hooks.json) and replace CODELUX_PLUGIN with the absolute path of the folder that holds scripts/. Same scripts as the Claude Code plugin; plain stdout is added as context, exit 2 on acquire blocks the edit with the stderr reason. PreToolUse/PostToolUse on every tool (.*) feed the procedure trace (377). See hooks/OTHER-AGENTS.md for the fields we could not verify.",
   "hooks": {
     "SessionStart": [
       {
@@ -7,9 +7,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\"",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-start.sh\" --agent=codex",
             "timeout": 10,
             "additionalContextLimit": 12500
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" start --agent=codex",
+            "timeout": 5
           }
         ]
       }
@@ -19,7 +29,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\"",
+            "command": "bash \"CODELUX_PLUGIN/scripts/prompt-memory.sh\" --agent=codex",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" prompt --agent=codex",
             "timeout": 5
           }
         ]
@@ -31,8 +46,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" acquire --agent=codex",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" pre --agent=codex",
+            "timeout": 5
           }
         ]
       }
@@ -43,8 +68,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release",
+            "command": "bash \"CODELUX_PLUGIN/scripts/edit-lock.sh\" release --agent=codex",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" post --agent=codex",
+            "timeout": 5
           }
         ]
       }
@@ -54,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"CODELUX_PLUGIN/scripts/session-stop.sh\"",
+            "command": "bash \"CODELUX_PLUGIN/scripts/session-track.sh\" stop --agent=codex",
             "timeout": 5
           }
         ]

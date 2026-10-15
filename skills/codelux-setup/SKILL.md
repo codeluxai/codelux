@@ -53,11 +53,13 @@ directory (case-insensitive on Windows; `\` and `/` are equivalent).
 - **Found**: remember that `path`. Every Codelux tool takes it as `root` (the ABSOLUTE PATH of the project
   folder, never the id or the name). Go to step 4.
 - **Not found**: the daemon cannot add projects on its own - projects are registered by the user:
-  - **Multi / Team plan**: sign in at **https://codelux.ai/dashboard**, open **Projects**, paste the
-    absolute path of this folder in **Add a project** and save. The daemon picks the list up by itself.
-  - **Free plan**: one active project per machine. Add the folder the same way in
-    https://codelux.ai/dashboard -> Projects, or switch the active project from the local dashboard
-    (`http://localhost:PORT`). Free allows a few project changes per day.
+  - **Multi / Team plan**: in the local dashboard (`http://localhost:PORT`) open **Projects**, click
+    **+ Add project**, paste the absolute path of this folder and save; the list also shows in the
+    Console (**https://codelux.ai/console** -> Account -> Your projects). The daemon picks it up by itself.
+  - **Free plan**: one active project per machine. Add the folder the same way, then switch the active
+    project from the local dashboard (`http://localhost:PORT`) or from the Console
+    (https://codelux.ai/console -> Account -> Your projects, per machine). Free allows a few project
+    changes per day.
   Give the user the exact absolute path to paste. Then repeat this step until the folder appears.
   Indexing starts automatically; a large project may take a little while.
 

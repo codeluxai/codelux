@@ -7,7 +7,7 @@ If you believe you have found a security issue, please **do not open a public
 issue**. Write to **hello@codelux.ai** with:
 
 - what you found and how to reproduce it,
-- the Codelux version (Account tab in the app) and your OS,
+- the Codelux version (Settings > Application in the app) and your OS,
 - whether the issue affects the app, the website or the team service.
 
 You will get an acknowledgement within 3 business days and a fix or a
