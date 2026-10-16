@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "codelux",
   "displayName": "Codelux",
-  "version": "4.10.2",
+  "version": "4.11.0",
   "description": "The AI Development Space: local index, persistent memory and team sharing for your coding agents",
   "author": {
     "name": "Codelux",
