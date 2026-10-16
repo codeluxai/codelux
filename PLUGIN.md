@@ -34,10 +34,15 @@ or, inside Claude Code: `/plugin marketplace add codeluxai/codelux`, then `/plug
 | `/codelux:status` | Daemon, plan, project and newest memory |
 | `/codelux:memory [since] [topic]` | Recalls the recent work on the project (memories, timeline, open todos) |
 | `/codelux:checkpoint [topic]` | Writes the memory of the session (`memory_set`) for the next one |
-| SessionStart hook | Puts the newest project memory in context and refreshes the Codelux block in `AGENTS.md` (and `CLAUDE.md` if present); silent when Codelux is not running (needs `bash` and `curl`; on Windows, Git Bash) |
+| SessionStart hook | Puts the newest project memory in context and refreshes the Codelux block in `AGENTS.md` (and `CLAUDE.md` if present); silent when Codelux is not running (needs `bash` and `curl`; on Windows, Git Bash); one line when the plugin is doubled (an older "Codelux" from the Claude Directory next to this one) or its local install is broken |
+| SubagentStart hook | The agent brief of the task the main session gave the subagent: plan and claims, decisions and traps of the topics it names (with who wrote them and when), the compressed index of each file it cites (`file: symbol@a-b, …`), code bodies while they fit; at most 9,000 chars, within 3 s (past it: a short brief and `memory_get{id:"late_…"}` for the whole one) |
 | UserPromptSubmit hook | Adds the codemaps, facts and decisions relevant to the prompt (local search, verified against the code); adds nothing when nothing is found |
 | Edit/Write hooks | Take and release the file lock around each of Claude Code's own edits: local between agents on the machine, plus the Team lock on the Team plan; an edit is refused only when someone else holds the file |
 | Session tracker (`session-track.sh`, silent) | On SessionStart, UserPromptSubmit, PreToolUse (Read and Codelux tools), Stop, SubagentStop and SessionEnd: gives the conversation ONE Codelux session code (the same name on locks, memories, notes and messages), records the files read (path, hash, line range, never the text), reads the token numbers of each turn from the transcript and writes an end-of-work usage report (tools `tasks_get`, `tasks_report`; Timeline). Prints nothing, so it adds nothing to the context |
+
+## Two "codelux" plugins
+
+If you installed Codelux both from the Claude plugin Directory (your account) and from this marketplace, the Claude desktop app may load the Directory copy only. When that copy is older, Codelux says so at session start (`⚠ Codelux: this session runs the OLD account plugin …`) and the app's Usage page shows "Hooks active: no". Fix: in the Claude app open Plugins (Manage plugins), turn off or remove the Directory "Codelux", keep `codelux@codelux`, start a new session. A local install whose folder is gone: `claude plugin install codelux@codelux`, then `/reload-plugins`.
 
 ## AGENTS.md block
 

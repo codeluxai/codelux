@@ -110,3 +110,13 @@ update, which the daemon does by itself).
 Range reads: `GET /api/project/{id}/read?file=&from=&to=`, `codelux read <projectid> <file> <from> <to>`,
 and on MCP `code_context` with `name="<file>:<from>-<to>"` (no new schema parameter: the tools/list
 budget is full); `code_context name="<file>"` is the file's outline.
+
+## Subagent memory and the outbox (SCH, 15/10/2026)
+
+| | Claude Code | Codex | Gemini CLI |
+|---|---|---|---|
+| memory for a subagent at its start | `SubagentStart` → `subagent-start.sh start` (newest memory + the memory relevant to the task, queued by `PreToolUse` on `Agent\|Task` → `subagent-start.sh remember`), `hookSpecificOutput.additionalContext` | no subagent-start event: nothing to mirror | no subagent-start event: nothing to mirror |
+| a memory write while the daemon is down | `PostToolUseFailure` on `mcp__.*codelux.*__(memory_set\|notes_set)` → `outbox.sh queue`; `SessionStart` → `outbox.sh flush` | no failure event: use the CLI (`codelux tool <id> memory_set …` queues by itself) | same as Codex |
+
+The daemon sends the queue (`<project>/.codelux/outbox/`) by itself 5 s after it starts and then
+every minute; `codelux outbox [list|flush]` shows or sends it by hand.

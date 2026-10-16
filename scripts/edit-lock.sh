@@ -51,7 +51,41 @@ agent=""
 # The daemon gives the subagent its own session code, child of the parent's.
 [ -n "$agent" ] && agent="$agent$(cx_subagent_fields "$input")"
 
-resp="$(cx_call code_lock ',"op":"'"$op"'","path":"'"$path"'"'"$agent$failed" 8)" || exit 0
+# MemV2-delivery (SPEC-MEMORIA-V2 §5): Pre/Post hooks wait at most 1.5 s. The
+# daemon answers within cx_budget_ms (1.2 s) with what it has — "ok: lock
+# pending" + a notice when the Team link is slow — and finishes the lock in
+# the background (hook_budget.go: acquire and release of a file stay in order).
+resp="$(cx_call code_lock ',"op":"'"$op"'","path":"'"$path"'","cx_budget_ms":1200'"$agent$failed" 1.5)"
+rc=$?
+if [ "$rc" -ne 0 ]; then
+  # RT-fix B3 (giornata d2, 15/10/2026): a daemon that is THERE but does not answer
+  # in 8 s (curl 28 = timeout; a team link dead in silence made the lock request
+  # wait) used to let the edit through with no word: an edit without a lock that
+  # looked like one with. The edit still proceeds (a hook must never wedge the
+  # agent on a slow daemon), but the model is told, plainly, that no lock covers it.
+  # No daemon at all (curl 7) stays silent, EXCEPT in a folder Codelux shares with a
+  # team (its .codelux/settings.json carries share_mode): there an edit while the
+  # daemon is down or restarting is an edit no team lock covers (bench f1: the only
+  # overlap of the day, mem06 editing during its daemon's restart).
+  if [ "$op" = "acquire" ]; then
+    why=""
+    # curl says 28 also when the CONNECT timed out (Windows retries a refused SYN):
+    # only a daemon that accepts a connection and then does not answer is "slow".
+    if [ "$rc" -eq 28 ] && ! curl -s -o /dev/null --connect-timeout 0.3 -m 0.4 "http://127.0.0.1:${cx_port}/api/auth/status" 2>/dev/null; then
+      rc=7
+    fi
+    if [ "$rc" -eq 28 ]; then
+      why="Codelux did not answer the lock request within 1.5 s (in a Team project the realtime link may be down)"
+    elif grep -qs '"share_mode"' "$cx_root/.codelux/settings.json"; then
+      why="Codelux is not running, and this folder is shared with a team"
+    fi
+    if [ -n "$why" ]; then
+      printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"%s"}}\n' \
+        "$(cx_json_escape "Codelux lock: NO LOCK was taken on this file - $why. A teammate may be editing it: check before overwriting, and prefer to retry the edit in a moment.")"
+    fi
+  fi
+  exit 0
+fi
 
 [ "$op" = "acquire" ] || exit 0
 text="$(cx_text "$resp")" || exit 0
@@ -61,6 +95,23 @@ case "$text" in
     msg="${msg#refused:}"
     printf 'Codelux lock: %s\n' "${msg%%$'\n'*}" >&2
     exit 2
+    ;;
+  *$'\n'"notice: "*)
+    # MemV2-delivery: the lock was not taken in time (hook_budget.go); the
+    # edit goes on and the model is told plainly
+    note="${text#*$'\n'notice: }"
+    note="${note%%$'\n'*}"
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"%s"}}\n' \
+      "$(cx_json_escape "Codelux lock: $note")"
+    ;;
+  *$'\n'"claim: "*)
+    # SCH-idee B: the file lies in another live agent's CLAIM (advisory). The
+    # daemon adds the line once per (agent, claim) every 15 min; the edit goes
+    # on (exit 0) and the model reads the warning as context.
+    claim="${text#*$'\n'claim: }"
+    claim="${claim%%$'\n'*}"
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"%s"}}\n' \
+      "$(cx_json_escape "Codelux claim: $claim")"
     ;;
 esac
 exit 0

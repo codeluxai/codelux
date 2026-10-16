@@ -1,5 +1,5 @@
 {
-  "description": "Codelux: at session start, put the project memory in context and refresh the AGENTS.md block; with each prompt, add the relevant memory (nothing when nothing is found); around Claude Code's own Edit/Write, take and release the file lock (local + Team); at the end of a turn (Stop), read its token numbers. Silent when the daemon is not running. The lock is also released when the edit fails (PostToolUseFailure), so a failed edit never holds a file. Session tracking (session-track.sh, silent): one Codelux session code per conversation for hooks, MCP calls and REST/CLI calls (a shell command that calls Codelux declares its agent name on the session; SessionStart exports CODELUX_SESSION/CODELUX_PROVIDER via CLAUDE_ENV_FILE), files read (path+hash, never text), per-turn token numbers from the transcript, end-of-work usage report. Procedure trace (377): PreToolUse + PostToolUse + PostToolUseFailure on EVERY tool (matcher .*), main session and subagents: tool, essential arguments (secrets redacted), response size, duration, outcome — never contents or outputs, local only; at most 2 sober hints a turn when a read is clearly wasted (off in the project settings).",
+  "description": "Codelux: at session start, put the project memory in context and refresh the AGENTS.md block; with each prompt, add the relevant memory (nothing when nothing is found); around Claude Code's own Edit/Write, take and release the file lock (local + Team); at the end of a turn (Stop), read its token numbers. Silent when the daemon is not running. The lock is also released when the edit fails (PostToolUseFailure), so a failed edit never holds a file. Session tracking (session-track.sh, silent): one Codelux session code per conversation for hooks, MCP calls and REST/CLI calls (a shell command that calls Codelux declares its agent name on the session; SessionStart exports CODELUX_SESSION/CODELUX_PROVIDER via CLAUDE_ENV_FILE), files read (path+hash, never text), per-turn token numbers from the transcript, end-of-work usage report. Procedure trace (377): PreToolUse + PostToolUse + PostToolUseFailure on EVERY tool (matcher .*), main session and subagents: tool, essential arguments (secrets redacted), response size, duration, outcome — never contents or outputs, local only; at most 2 sober hints a turn when a read is clearly wasted (off in the project settings). Subagents (SCH 15/10/2026): SubagentStart puts the project memory (newest + relevant to the task the parent gave on PreToolUse Agent|Task) in the subagent context. Time budgets (MemV2, 16/10/2026): SessionStart answers within 8 s (hook timeout 10), SubagentStart within ~2.6 s (hook timeout 5), the edit lock and the PreToolUse tracker within 1.5 s; past the budget the daemon gives what is ready and finishes in the background (memory_get{id:\"late_...\"}). SessionStart also says in one line when the plugin is doubled (the account copy from the Claude Directory) or its local install is broken. Outbox: a codelux memory_set/notes_set that fails because the daemon is down is queued in .codelux/outbox and sent by the daemon when it is back; SessionStart asks for a flush.",
   "hooks": {
     "SessionStart": [
       {
@@ -18,6 +18,15 @@
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" start",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/outbox.sh\" flush",
+            "timeout": 10
           }
         ]
       }
@@ -45,7 +54,7 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" acquire",
-            "timeout": 10
+            "timeout": 3
           }
         ]
       },
@@ -55,6 +64,16 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" pre",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/subagent-start.sh\" remember",
             "timeout": 5
           }
         ]
@@ -67,7 +86,7 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" release",
-            "timeout": 10
+            "timeout": 3
           }
         ]
       },
@@ -100,7 +119,7 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/edit-lock.sh\" release-failed",
-            "timeout": 10
+            "timeout": 3
           }
         ]
       },
@@ -110,6 +129,16 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" post-fail",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*codelux.*__(memory_set|notes_set)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/outbox.sh\" queue",
             "timeout": 5
           }
         ]
@@ -133,6 +162,17 @@
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/session-track.sh\" end",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/subagent-start.sh\" start",
+            "timeout": 5
           }
         ]
       }
